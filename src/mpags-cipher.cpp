@@ -14,17 +14,11 @@ int main(int argc, char* argv[])
     const std::vector<std::string> cmdLineArgs{argv, argv + argc};
 
     // Options that might be set by the command-line arguments
-    bool helpRequested{false};
-    bool versionRequested{false};
-    std::string inputFile{""};
-    std::string outputFile{""};
-    std::string cipherKey{""};
-    bool encrypt{true};
-
+    ProgramSettings setup{false, false, "", "", "", true};
+    
     // Process command line arguments
     const bool cmdLineStatus{
-        processCommandLine(cmdLineArgs, helpRequested, versionRequested,
-                           inputFile, outputFile, cipherKey, encrypt)};
+        processCommandLine(cmdLineArgs, setup)};
 
     // Any failure in the argument processing means we can't continue
     // Use a non-zero return value to indicate failure
@@ -33,7 +27,7 @@ int main(int argc, char* argv[])
     }
 
     // Handle help, if requested
-    if (helpRequested) {
+    if (setup.helpRequested) {
         // Line splitting for readability
         std::cout
             << "Usage: mpags-cipher [-h/--help] [--version] [-i <file>] [-o <file>] [-k <key>] [--encrypt/--decrypt]\n\n"
@@ -58,7 +52,7 @@ int main(int argc, char* argv[])
 
     // Handle version, if requested
     // Like help, requires no further action
-    if (versionRequested) {
+    if (setup.versionRequested) {
         std::cout << "0.2.0" << std::endl;
         return 0;
     }
@@ -68,12 +62,12 @@ int main(int argc, char* argv[])
     std::string inputText;
 
     // Read in user input from stdin/file
-    if (!inputFile.empty()) {
+    if (!setup.inputFile.empty()) {
         // Open the file and check that we can read from it
-        std::ifstream inputStream{inputFile};
+        std::ifstream inputStream{setup.inputFile};
         if (!inputStream.good()) {
             std::cerr << "[error] failed to create istream on file '"
-                      << inputFile << "'" << std::endl;
+                      << setup.inputFile << "'" << std::endl;
             return 1;
         }
 
@@ -92,33 +86,33 @@ int main(int argc, char* argv[])
 
     // We have the key as a string, but the Caesar cipher needs an unsigned long, so we first need to convert it
     std::size_t caesarKey{0};
-    if (!cipherKey.empty()) {
+    if (!setup.cipherKey.empty()) {
         // Here we loop through each character and checking that it
         // is a digit. We may want to check whether the number is too large 
         // to be represented by an unsigned long.
-        // May do that by allowing only a certain m=number of digits!
-        for (const auto& elem : cipherKey) {
+        // We may do that by allowing only a certain number of digits!
+        for (const auto& elem : setup.cipherKey) {
             if (!std::isdigit(elem)) {
                 std::cerr
                     << "[error] cipher key must be an unsigned long integer for Caesar cipher,\n"
-                    << "        the supplied key (" << cipherKey
+                    << "        the supplied key (" << setup.cipherKey
                     << ") could not be successfully converted" << std::endl;
                 return 1;
             }
         }
-        caesarKey = std::stoul(cipherKey);
+        caesarKey = std::stoul(setup.cipherKey);
     }
 
     // Run the Caesar cipher (using the specified key and encrypt/decrypt flag) on the input text
-    std::string outputText{runCaesarCipher(inputText, caesarKey, encrypt)};
+    std::string outputText{runCaesarCipher(inputText, caesarKey, setup.encrypt)};
 
     // Output the encrypted/decrypted text to stdout/file
-    if (!outputFile.empty()) {
+    if (!setup.outputFile.empty()) {
         // Open the file and check that we can write to it
-        std::ofstream outputStream{outputFile};
+        std::ofstream outputStream{setup.outputFile};
         if (!outputStream.good()) {
             std::cerr << "[error] failed to create ostream on file '"
-                      << outputFile << "'" << std::endl;
+                      << setup.outputFile << "'" << std::endl;
             return 1;
         }
 

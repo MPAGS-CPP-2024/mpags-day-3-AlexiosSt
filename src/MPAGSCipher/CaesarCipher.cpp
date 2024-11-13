@@ -24,7 +24,7 @@ CaesarCipher::CaesarCipher(const string& cipherKey){
     }
 }
 
-std::string CaesarCipher::applyCipher(const std::string& inputText, const bool encrypt){
+std::string CaesarCipher::applyCipher(const std::string& inputText, CipherMode encrypt){
     // Create the output string
     std::string outputText;
 
@@ -43,7 +43,7 @@ std::string CaesarCipher::applyCipher(const std::string& inputText, const bool e
                 // Apply the appropriate shift (depending on whether we're encrypting
                 // or decrypting) and determine the new character
                 // Can then break out of the loop over the alphabet
-                if (encrypt) {
+                if (encrypt==CipherMode::Encrypt) {
                     processedChar = abc_[(i + truncatedKey) % alphabetSize];
                 } else {
                     processedChar = abc_[(i + alphabetSize - truncatedKey) %

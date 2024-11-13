@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
     const std::vector<std::string> cmdLineArgs{argv, argv + argc};
 
     // Options that might be set by the command-line arguments
-    ProgramSettings setup{false, false, "", "", "", true};
+    ProgramSettings setup{false, false, "", "", "", CipherMode::Encrypt};
     
     // Process command line arguments
     const bool cmdLineStatus{
@@ -88,7 +88,7 @@ int main(int argc, char* argv[])
     CaesarCipher ccipher{setup.cipherKey};
 
     // Run the Caesar cipher (using the specified key and encrypt/decrypt flag) on the input text
-    std::string outputText{ccipher.applyCipher(inputText, setup.encrypt)};
+    std::string outputText{ccipher.applyCipher(inputText, setup.mode)};
 
     // Output the encrypted/decrypted text to stdout/file
     if (!setup.outputFile.empty()) {

@@ -1,6 +1,7 @@
 #include "ProcessCommandLine.hpp"
 #include "RunCaesarCipher.hpp"
 #include "TransformChar.hpp"
+#include "CaesarCipher.hpp"
 
 #include <cctype>
 #include <fstream>
@@ -84,27 +85,10 @@ int main(int argc, char* argv[])
         }
     }
 
-    // We have the key as a string, but the Caesar cipher needs an unsigned long, so we first need to convert it
-    std::size_t caesarKey{0};
-    if (!setup.cipherKey.empty()) {
-        // Here we loop through each character and checking that it
-        // is a digit. We may want to check whether the number is too large 
-        // to be represented by an unsigned long.
-        // We may do that by allowing only a certain number of digits!
-        for (const auto& elem : setup.cipherKey) {
-            if (!std::isdigit(elem)) {
-                std::cerr
-                    << "[error] cipher key must be an unsigned long integer for Caesar cipher,\n"
-                    << "        the supplied key (" << setup.cipherKey
-                    << ") could not be successfully converted" << std::endl;
-                return 1;
-            }
-        }
-        caesarKey = std::stoul(setup.cipherKey);
-    }
+    CaesarCipher ccipher{setup.cipherKey};
 
     // Run the Caesar cipher (using the specified key and encrypt/decrypt flag) on the input text
-    std::string outputText{runCaesarCipher(inputText, caesarKey, setup.encrypt)};
+    std::string outputText{ccipher.applyCipher(inputText, setup.encrypt)};
 
     // Output the encrypted/decrypted text to stdout/file
     if (!setup.outputFile.empty()) {

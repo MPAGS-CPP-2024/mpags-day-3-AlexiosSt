@@ -15,9 +15,9 @@ target_link_libraries(testCatch PRIVATE Catch)
 add_test(NAME test-catch COMMAND testCatch)
 
 # - Test the transliteration function
-#add_executable(testTransformChar testTransformChar.cpp)
-#target_link_libraries(testTransformChar PRIVATE Catch MPAGSCipher)
-#add_test(NAME test-transformchar COMMAND testTransformChar)
+add_executable(testTransformChar testTransformChar.cpp)
+target_link_libraries(testTransformChar PRIVATE Catch MPAGSCipher)
+add_test(NAME test-transformchar COMMAND testTransformChar)
 
 # - Test the process command line code
 add_executable(testProcessCmdLine testProcessCommandLine.cpp)
@@ -28,3 +28,8 @@ add_test(NAME test-processcmdline COMMAND testProcessCmdLine)
 add_executable(testProcessCmdLineV2 testProcessCommandLineV2.cpp)
 target_link_libraries(testProcessCmdLineV2 PRIVATE Catch MPAGSCipher)
 add_test(NAME test-processcmdlinev2 COMMAND testProcessCmdLineV2)
+
+# - Test the encryption/decryption of the caesar cipher
+add_executable(testCaesarCipher testCaesarCipher.cpp)
+target_link_libraries(testCaesarCipher PRIVATE Catch MPAGSCipher)
+add_test(NAME test-caesarcipher COMMAND testCaesarCipher)

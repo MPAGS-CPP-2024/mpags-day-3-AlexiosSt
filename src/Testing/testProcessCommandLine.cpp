@@ -1,4 +1,4 @@
-//! Test the function that transliterates the input to the cipher !
+//! Test the function that parses the cmd arguments given by the user !
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 

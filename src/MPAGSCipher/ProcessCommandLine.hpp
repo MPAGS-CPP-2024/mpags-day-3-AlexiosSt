@@ -6,12 +6,12 @@
 #include <vector>
 
 struct ProgramSettings{
-    bool helpRequested;
-    bool versionRequested;
-    std::string inputFile;
-    std::string outputFile;
-    std::string cipherKey;
-    CipherMode mode;
+    bool helpRequested{false};
+    bool versionRequested{false};
+    std::string inputFile{""};
+    std::string outputFile{""};
+    std::string cipherKey{""};
+    CipherMode mode{CipherMode::Encrypt};
 };
 
 bool processCommandLine(const std::vector<std::string>& cmdLineArgs,
